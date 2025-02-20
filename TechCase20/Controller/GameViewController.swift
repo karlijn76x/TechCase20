@@ -9,8 +9,10 @@ import Foundation
 import UIKit
 
 class GameViewController: UIViewController {
+    var game: ReactionGame?
+    
     override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        
-        
+        game?.startGame()
+    
     }
 }
