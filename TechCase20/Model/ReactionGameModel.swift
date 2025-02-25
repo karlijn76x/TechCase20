@@ -27,12 +27,12 @@ class ReactionGame : ObservableObject{
     }
     
     private func startCountDown() {
-            countdownTime = 3 // reset countdown naar 3 seconden
+            countdownTime = 3 // reset countdown to 3 seconds
             countdownTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
                 if self.countdownTime > 0 {
                     self.countdownTime -= 1
                 } else {
-                    timer.invalidate() // stop de timer
+                    timer.invalidate() // stop the timer
                     self.showTapMessage()
                 }
             }
