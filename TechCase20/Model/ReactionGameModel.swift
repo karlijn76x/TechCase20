@@ -10,7 +10,10 @@ import Foundation
 class ReactionGame : ObservableObject{
     @Published var gameState : GameState = .idle //start toestand (shake om te starten)
     @Published var reactionTime : Double? = nil
-    @Published var highScore : Double? = nil
+    @Published var highScore: Double? = {
+        let storedHighScore = UserDefaults.standard.object(forKey: "highScore") as? Double
+        return storedHighScore != nil && storedHighScore! > 0 ? storedHighScore : nil
+    }()
     @Published var countdownTime: Int = 3
     
     private var startTime: Date? //var to save the start time
@@ -47,10 +50,29 @@ class ReactionGame : ObservableObject{
     }
     
     public func tapDetected(){
-        guard let startTime = self.startTime else {return} //making sure there is a start time
-        let elapsedTime = Date().timeIntervalSince(startTime) //calculating reactiontime
+        guard let startTime = self.startTime else { return }
+        
+        let elapsedTime = Date().timeIntervalSince(startTime)
         reactionTime = elapsedTime
-        print("Tapped! Reactiontime: \(elapsedTime) seconds")
+        print("Tapped! Reaction time: \(elapsedTime) seconds")
+        
+        updateHighScore(elapsedTime) // update the highscore
+        
         self.gameState = .finished
+    }
+
+    
+    private func updateHighScore(_ newTime: Double) {
+            if highScore == nil || newTime < highScore! {
+                highScore = newTime
+                UserDefaults.standard.set(newTime, forKey: "highScore")
+            }
+        }
+    
+    public func resetGame() {
+        gameState = .idle
+        reactionTime = nil
+        countdownTime = 3
+        startTime = nil
     }
 }
